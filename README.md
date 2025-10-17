@@ -1,6 +1,6 @@
 # TaskFlow - Task Management Application
 
-A task management application built with React, TypeScript, and Mock Service Worker (MSW). This project demonstrates modern frontend development practices including authentication, CRUD operations, state management, and responsive design.
+A task management application built with React, TypeScript, and Mock Service Worker (MSW). This project demonstrates modern frontend development practices including authentication, CRUD operations, state management, dark/light mode, responsive design, and simulated backend APIs.
 
 ## Features
 
@@ -16,6 +16,7 @@ A task management application built with React, TypeScript, and Mock Service Wor
 -  **State Management**: Zustand for efficient state management
 -  **Mock API**: MSW (Mock Service Worker) simulates backend responses
 -  **Mobile-Friendly**: Fully responsive design for all screen sizes
+-  **Dark/Light Mode**: Toggle between themes seamlessly.
 -  **Fast Development**: Vite for blazing-fast development experience
 -  **Dark Mode Ready**: Built-in dark theme support
 
@@ -65,6 +66,11 @@ To access the application, use these credentials:
 
 - **Username**: `prerna`
 - **Password**: `saxena`
+
+##Dark/Light Mode
+
+- Toggle between dark and light themes using the switch in the header.
+- Ensures accessibility and modern UX across devices.
 
 ##  How the Mocking Works
 
