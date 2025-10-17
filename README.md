@@ -196,4 +196,4 @@ This is a case study project, but suggestions and improvements are welcome!
 
 ---
 
-**Built with ❤️ for the Frontend Developer Case Study**
+**Built with ❤️ By Prerna Saxena**
