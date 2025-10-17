@@ -1,25 +1,25 @@
-# TaskFlow - Modern Task Management Application
+# TaskFlow - Task Management Application
 
-A beautiful, fully-featured task management application built with React, TypeScript, and Mock Service Worker (MSW). This project demonstrates modern frontend development practices including authentication, CRUD operations, state management, and responsive design.
+A task management application built with React, TypeScript, and Mock Service Worker (MSW). This project demonstrates modern frontend development practices including authentication, CRUD operations, state management, and responsive design.
 
-## 🚀 Features
+## Features
 
 ### Core Functionality
-- ✅ **User Authentication**: Secure login with JWT token simulation
-- ✅ **Task Management**: Complete CRUD operations (Create, Read, Update, Delete)
-- ✅ **Task Organization**: Organize tasks by status (To Do, In Progress, Done)
-- ✅ **Protected Routes**: Dashboard access restricted to authenticated users
-- ✅ **Persistent State**: Data persists across browser reloads using localStorage
+-  **User Authentication**: Secure login with JWT token simulation
+-  **Task Management**: Complete CRUD operations (Create, Read, Update, Delete)
+-  **Task Organization**: Organize tasks by status (To Do, In Progress, Done)
+-  **Protected Routes**: Dashboard access restricted to authenticated users
+-  **Persistent State**: Data persists across browser reloads using localStorage
 
 ### Technical Features
-- 🎨 **Modern UI**: Beautiful, responsive design with Tailwind CSS
-- 🔄 **State Management**: Zustand for efficient state management
-- 🌐 **Mock API**: MSW (Mock Service Worker) simulates backend responses
-- 📱 **Mobile-Friendly**: Fully responsive design for all screen sizes
-- ⚡ **Fast Development**: Vite for blazing-fast development experience
-- 🎭 **Dark Mode Ready**: Built-in dark theme support
+-  **Modern UI**: Beautiful, responsive design with Tailwind CSS
+-  **State Management**: Zustand for efficient state management
+-  **Mock API**: MSW (Mock Service Worker) simulates backend responses
+-  **Mobile-Friendly**: Fully responsive design for all screen sizes
+-  **Fast Development**: Vite for blazing-fast development experience
+-  **Dark Mode Ready**: Built-in dark theme support
 
-## 🛠️ Technologies Used
+##  Technologies Used
 
 | Category | Technology |
 |----------|-----------|
@@ -32,7 +32,7 @@ A beautiful, fully-featured task management application built with React, TypeSc
 | **HTTP Client** | Fetch API |
 | **Routing** | React Router v6 |
 
-## 📦 Installation & Setup
+##  Installation & Setup
 
 ### Prerequisites
 - Node.js (v16 or higher)
@@ -59,14 +59,14 @@ A beautiful, fully-featured task management application built with React, TypeSc
 4. **Open your browser**
    Navigate to `http://localhost:8080`
 
-## 🔐 Demo Credentials
+##  Demo Credentials
 
 To access the application, use these credentials:
 
-- **Username**: `test`
-- **Password**: `test123`
+- **Username**: `prerna`
+- **Password**: `saxena`
 
-## 🎯 How the Mocking Works
+##  How the Mocking Works
 
 This application uses **Mock Service Worker (MSW)** to simulate a backend API without requiring an actual server. Here's how it works:
 
@@ -93,7 +93,7 @@ This application uses **Mock Service Worker (MSW)** to simulate a backend API wi
 - `src/mocks/browser.ts` - Configures MSW for the browser
 - `public/mockServiceWorker.js` - MSW service worker file
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 taskflow/
@@ -120,7 +120,7 @@ taskflow/
 └── package.json
 ```
 
-## 🎨 Design System
+##  Design System
 
 The application uses a carefully crafted design system with:
 
@@ -131,7 +131,7 @@ The application uses a carefully crafted design system with:
 - **Spacing**: Consistent spacing system
 - **Responsive**: Mobile-first responsive design
 
-## 🧪 Testing
+##  Testing
 
 The application includes comprehensive testing capabilities:
 
@@ -143,7 +143,7 @@ npm run test
 npm run test:watch
 ```
 
-## 🚀 Deployment
+##  Deployment
 
 ### Build for Production
 
@@ -168,7 +168,7 @@ This creates an optimized production build in the `dist` folder.
 4. Publish directory: `dist`
 5. Deploy!
 
-## 📚 Libraries Used
+##  Libraries Used
 
 - **zustand** - Lightweight state management
 - **msw** - Mock Service Worker for API mocking
@@ -178,7 +178,7 @@ This creates an optimized production build in the `dist` folder.
 - **lucide-react** - Icon library
 - **sonner** - Toast notifications
 
-## 🎓 Learning Resources
+##  Learning Resources
 
 - [React Documentation](https://react.dev)
 - [TypeScript Documentation](https://www.typescriptlang.org/docs)
@@ -186,14 +186,9 @@ This creates an optimized production build in the `dist` folder.
 - [Zustand Documentation](https://zustand-demo.pmnd.rs)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 
-## 📝 License
+##  License
 
 This project is created as a case study demonstration and is available for educational purposes.
 
-## 🤝 Contributing
-
-This is a case study project, but suggestions and improvements are welcome!
-
 ---
 
-**Built with ❤️ By Prerna Saxena**
