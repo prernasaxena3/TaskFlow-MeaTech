@@ -7,13 +7,11 @@ async function enableMocking() {
     const { worker } = await import("./mocks/browser");
     await worker.start({
       onUnhandledRequest: "bypass", // logs unhandled requests
-      // serviceWorker: { url: '/mockServiceWorker.js' } // optional
     });
   }
 }
 
-enableMocking()
-  .then(() => {
-    createRoot(document.getElementById("root")!).render(<App />);
-  })
-  .catch(console.error);
+// Start mocking in dev, then render the app
+enableMocking().finally(() => {
+  createRoot(document.getElementById("root")!).render(<App />);
+});

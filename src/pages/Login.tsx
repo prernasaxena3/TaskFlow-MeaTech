@@ -1,17 +1,24 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/stores/authStore';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from 'sonner';
-import { CheckSquare, Loader2 } from 'lucide-react';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/stores/authStore";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { toast } from "sonner";
+import { CheckSquare, Loader2 } from "lucide-react";
 
 export const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
 
@@ -20,29 +27,41 @@ export const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
+      let data;
 
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Server returned non-JSON response. Mock API may not be running.');
+      if (import.meta.env.DEV) {
+        // Use MSW in development
+        const response = await fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error(
+            "Server returned non-JSON response. Mock API may not be running."
+          );
+        }
+        data = await response.json();
+      } else {
+        // Production: frontend-only mock
+        if (username === "prerna" && password === "saxena") {
+          data = { success: true, token: "mock-token", user: { username } };
+        } else {
+          data = { success: false, message: "Invalid credentials" };
+        }
       }
-
-      const data = await response.json();
 
       if (data.success) {
         login(data.token, data.user.username);
-        toast.success('Welcome back!');
-        navigate('/dashboard');
+        toast.success("Welcome back!");
+        navigate("/dashboard");
       } else {
-        toast.error(data.message || 'Invalid credentials');
+        toast.error(data.message || "Invalid credentials");
       }
     } catch (error) {
-      console.error('Login error:', error);
-      toast.error('Login failed. Mock service not ready - please refresh the page.');
+      console.error("Login error:", error);
+      toast.error("Login failed. Please refresh the page.");
     } finally {
       setIsLoading(false);
     }
@@ -51,6 +70,7 @@ export const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-8">
+        {/* Header */}
         <div className="text-center space-y-2">
           <div className="flex justify-center mb-4">
             <div className="p-3 rounded-2xl bg-gradient-to-br from-primary to-accent">
@@ -61,10 +81,13 @@ export const Login = () => {
           <p className="text-muted-foreground">Sign in to manage your tasks</p>
         </div>
 
+        {/* Login Card */}
         <Card className="border-border bg-card">
           <CardHeader>
             <CardTitle>Welcome back</CardTitle>
-            <CardDescription>Enter your credentials to access your dashboard</CardDescription>
+            <CardDescription>
+              Enter your credentials to access your dashboard
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -99,14 +122,20 @@ export const Login = () => {
                     Signing in...
                   </>
                 ) : (
-                  'Sign in'
+                  "Sign in"
                 )}
               </Button>
             </form>
+
+            {/* Demo credentials */}
             <div className="mt-4 p-3 rounded-lg bg-muted/50 text-sm text-muted-foreground">
               <p className="font-medium mb-1">Demo Credentials:</p>
-              <p>Username: <span className="font-mono">prerna</span></p>
-              <p>Password: <span className="font-mono">saxena</span></p>
+              <p>
+                Username: <span className="font-mono">prerna</span>
+              </p>
+              <p>
+                Password: <span className="font-mono">saxena</span>
+              </p>
             </div>
           </CardContent>
         </Card>
