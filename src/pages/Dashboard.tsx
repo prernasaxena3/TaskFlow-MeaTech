@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { TaskCard } from "@/components/TaskCard";
 import { TaskDialog } from "@/components/TaskDialog";
 import { toast } from "sonner";
-import { LogOut, Plus, CheckSquare, Loader2 } from "lucide-react";
+import { LogOut, Plus, CheckSquare, Loader2, Sun, Moon } from "lucide-react";
 
 // Mock data for production
 const MOCK_TASKS: Task[] = [
@@ -42,13 +42,39 @@ export const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(() =>
+    document.documentElement.classList.contains("dark")
+  );
 
   const navigate = useNavigate();
   const { username, logout } = useAuthStore();
   const { tasks, setTasks, addTask, updateTask, deleteTask } = useTaskStore();
 
+  // Dark mode toggle
+  const handleToggleDarkMode = () => {
+    if (isDarkMode) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    }
+    setIsDarkMode(!isDarkMode);
+  };
+
+  // Load saved theme
   useEffect(() => {
-    // Load mock tasks in production
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+      setIsDarkMode(true);
+    } else {
+      document.documentElement.classList.remove("dark");
+      setIsDarkMode(false);
+    }
+  }, []);
+
+  useEffect(() => {
     if (import.meta.env.DEV) {
       fetchTasks(); // Keep MSW in dev
     } else {
@@ -141,10 +167,23 @@ export const Dashboard = () => {
                 </p>
               </div>
             </div>
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
-              <LogOut className="w-4 h-4" />
-              Logout
-            </Button>
+
+            <div className="flex items-center gap-2">
+              {/* Dark mode toggle */}
+              <Button variant="ghost" size="sm" onClick={handleToggleDarkMode}>
+                {isDarkMode ? (
+                  <Sun className="w-4 h-4" />
+                ) : (
+                  <Moon className="w-4 h-4" />
+                )}
+              </Button>
+
+              {/* Logout button */}
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <LogOut className="w-4 h-4" />
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </header>
