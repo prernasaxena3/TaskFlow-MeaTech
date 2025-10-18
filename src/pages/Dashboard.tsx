@@ -42,6 +42,7 @@ export const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(() =>
     document.documentElement.classList.contains("dark")
   );
@@ -62,7 +63,6 @@ export const Dashboard = () => {
     setIsDarkMode(!isDarkMode);
   };
 
-  // Load saved theme
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
@@ -76,7 +76,7 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (import.meta.env.DEV) {
-      fetchTasks(); // Keep MSW in dev
+      fetchTasks();
     } else {
       setTasks(MOCK_TASKS);
       setIsLoading(false);
@@ -101,7 +101,6 @@ export const Dashboard = () => {
     navigate("/login");
   };
 
-  // Frontend-only CRUD
   const handleCreateTask = (
     taskData: Omit<Task, "id" | "createdAt" | "updatedAt">
   ) => {
@@ -131,16 +130,21 @@ export const Dashboard = () => {
     setEditingTask(null);
   };
 
-  const handleDeleteTask = (id: string) => {
-    deleteTask(id);
-    toast.success("Task deleted successfully");
+  // Delete modal handlers
+  const handleDeleteTaskClick = (task: Task) => setTaskToDelete(task);
+  const handleConfirmDelete = () => {
+    if (taskToDelete) {
+      deleteTask(taskToDelete.id);
+      toast.success("Task deleted successfully");
+      setTaskToDelete(null);
+    }
   };
+  const handleCancelDelete = () => setTaskToDelete(null);
 
   const handleEditClick = (task: Task) => {
     setEditingTask(task);
     setIsDialogOpen(true);
   };
-
   const handleDialogClose = () => {
     setIsDialogOpen(false);
     setEditingTask(null);
@@ -154,36 +158,31 @@ export const Dashboard = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-gradient-to-br from-primary to-accent">
-                <CheckSquare className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold">TaskFlow</h1>
-                <p className="text-sm text-muted-foreground">
-                  Welcome back, {username}
-                </p>
-              </div>
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-primary to-accent">
+              <CheckSquare className="w-5 h-5 text-primary-foreground" />
             </div>
-
-            <div className="flex items-center gap-2">
-              {/* Dark mode toggle */}
-              <Button variant="ghost" size="sm" onClick={handleToggleDarkMode}>
-                {isDarkMode ? (
-                  <Sun className="w-4 h-4" />
-                ) : (
-                  <Moon className="w-4 h-4" />
-                )}
-              </Button>
-
-              {/* Logout button */}
-              <Button variant="ghost" size="sm" onClick={handleLogout}>
-                <LogOut className="w-4 h-4" />
-                Logout
-              </Button>
+            <div>
+              <h1 className="text-xl font-bold">TaskFlow</h1>
+              <p className="text-sm text-muted-foreground">
+                Welcome back, {username}
+              </p>
             </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" onClick={handleToggleDarkMode}>
+              {isDarkMode ? (
+                <Sun className="w-4 h-4" />
+              ) : (
+                <Moon className="w-4 h-4" />
+              )}
+            </Button>
+            <Button variant="ghost" size="sm" onClick={handleLogout}>
+              <LogOut className="w-4 h-4" />
+              Logout
+            </Button>
           </div>
         </div>
       </header>
@@ -198,8 +197,7 @@ export const Dashboard = () => {
             </p>
           </div>
           <Button onClick={() => setIsDialogOpen(true)}>
-            <Plus className="w-4 h-4" />
-            New Task
+            <Plus className="w-4 h-4" /> New Task
           </Button>
         </div>
 
@@ -217,13 +215,12 @@ export const Dashboard = () => {
               Create your first task to get started
             </p>
             <Button onClick={() => setIsDialogOpen(true)}>
-              <Plus className="w-4 h-4" />
-              Create Task
+              <Plus className="w-4 h-4" /> Create Task
             </Button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* To Do Column */}
+            {/* To Do */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-2 h-2 rounded-full bg-muted-foreground" />
@@ -239,7 +236,7 @@ export const Dashboard = () => {
                   key={task.id}
                   task={task}
                   onEdit={handleEditClick}
-                  onDelete={handleDeleteTask}
+                  onDelete={handleDeleteTaskClick}
                   onStatusChange={(status) =>
                     handleUpdateTask(task.id, { status })
                   }
@@ -247,23 +244,17 @@ export const Dashboard = () => {
               ))}
             </div>
 
-            {/* In Progress Column */}
+            {/* In Progress */}
             <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-2 h-2 rounded-full bg-primary" />
-                <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">
-                  In Progress
-                </h3>
-                <span className="text-xs text-muted-foreground">
-                  ({inProgressTasks.length})
-                </span>
-              </div>
+              <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">
+                In Progress
+              </h3>
               {inProgressTasks.map((task) => (
                 <TaskCard
                   key={task.id}
                   task={task}
                   onEdit={handleEditClick}
-                  onDelete={handleDeleteTask}
+                  onDelete={handleDeleteTaskClick}
                   onStatusChange={(status) =>
                     handleUpdateTask(task.id, { status })
                   }
@@ -271,23 +262,17 @@ export const Dashboard = () => {
               ))}
             </div>
 
-            {/* Done Column */}
+            {/* Done */}
             <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-2 h-2 rounded-full bg-[hsl(var(--success))]" />
-                <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">
-                  Done
-                </h3>
-                <span className="text-xs text-muted-foreground">
-                  ({doneTasks.length})
-                </span>
-              </div>
+              <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">
+                Done
+              </h3>
               {doneTasks.map((task) => (
                 <TaskCard
                   key={task.id}
                   task={task}
                   onEdit={handleEditClick}
-                  onDelete={handleDeleteTask}
+                  onDelete={handleDeleteTaskClick}
                   onStatusChange={(status) =>
                     handleUpdateTask(task.id, { status })
                   }
@@ -298,20 +283,39 @@ export const Dashboard = () => {
         )}
       </main>
 
+      {/* Task Dialog */}
       <TaskDialog
         open={isDialogOpen}
         onOpenChange={handleDialogClose}
         task={editingTask}
         onSubmit={(data) => {
-          if (editingTask) {
-            handleUpdateTask(editingTask.id, data);
-          } else {
+          if (editingTask) handleUpdateTask(editingTask.id, data);
+          else
             handleCreateTask(
               data as Omit<Task, "id" | "createdAt" | "updatedAt">
             );
-          }
         }}
       />
+
+      {/* Delete Modal */}
+      {taskToDelete && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-card p-6 rounded-md w-96 shadow-lg">
+            <h2 className="text-lg font-bold mb-2">Confirm Delete</h2>
+            <p className="mb-4">
+              Are you sure you want to delete "{taskToDelete.title}"?
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={handleCancelDelete}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={handleConfirmDelete}>
+                Delete
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
